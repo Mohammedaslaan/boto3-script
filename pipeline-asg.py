@@ -1,9 +1,10 @@
 import boto3
+import sys
 
-def get_latest_asg_name():
+def get_latest_asg_name(deployment_id):
     client = boto3.client('codedeploy')
     response = client.get_deployment(
-        deploymentId='d-7I7P67PG3'
+        deploymentId=deployment_id
     )
     return response['deploymentInfo']['targetInstances']['autoScalingGroups'][0]
 
@@ -53,7 +54,12 @@ def update_cloudwatch_alarm(auto_scaling_group_name, alarm_name):
 
 # Example usage
 if __name__ == "__main__":
-    new_asg_name = get_latest_asg_name()
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <deployment_id>")
+        sys.exit(1)
+    
+    deployment_id = sys.argv[1]
+    new_asg_name = get_latest_asg_name(deployment_id)
     auto_scaling_group_name = new_asg_name
     alarm_name = 'ASG-Alarm'
 
