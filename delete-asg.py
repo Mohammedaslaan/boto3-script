@@ -1,4 +1,5 @@
 import boto3
+import sys
 
 def delete_auto_scaling_group_with_name_containing(substring):
     # Initialize the Boto3 Auto Scaling client
@@ -21,7 +22,12 @@ def delete_auto_scaling_group_with_name_containing(substring):
         print("Named ASG not Exits")
         
 
-# Call the function with the substring to search for in the Auto Scaling group names
-
-asg_name_contain = "d-DXVTVCXG3"
-delete_auto_scaling_group_with_name_containing(asg_name_contain)
+if __name__ == "__main__":
+    # Check if the ASG name substring is provided as an argument
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <substring>")
+        sys.exit(1)
+    
+    # Get the ASG name substring from the command-line argument
+    asg_name_contain = sys.argv[1]
+    delete_auto_scaling_group_with_name_containing(asg_name_contain)
