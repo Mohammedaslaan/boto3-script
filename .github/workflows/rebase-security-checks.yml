@@ -1,0 +1,34 @@
+name: Rebase security-checks Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Fetch all branches
+        run: git fetch origin
+
+      - name: Checkout security-checks branch
+        run: git checkout security-checks
+
+      - name: Rebase security-checks onto main
+        run: git rebase origin/main
+
+      - name: Push rebased branch
+        run: git push origin security-checks --force
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
